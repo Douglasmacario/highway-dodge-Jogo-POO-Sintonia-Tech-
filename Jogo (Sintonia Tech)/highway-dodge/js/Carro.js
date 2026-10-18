@@ -4,8 +4,8 @@ export class Carro {
     constructor(x, y, cor, caminhoImagem = null) {
         this.x = x;
         this.y = y;
-        this.largura = 40;
-        this.altura = 70;
+        this.largura = 48;
+        this.altura = 82;
         this.cor = cor;
 
         this.imagem = null;

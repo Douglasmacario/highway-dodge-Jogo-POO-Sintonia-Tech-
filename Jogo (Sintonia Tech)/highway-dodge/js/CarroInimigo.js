@@ -1,62 +1,125 @@
 
 import { Carro } from "./Carro.js";
 
-// Classe responsável pelos carros adversários
 export class CarroInimigo extends Carro {
     constructor() {
-        // Define as posições das três faixas
-        const faixas = [85, 180, 275];
+        // Quatro faixas da rodovia
+        const faixas = [
+            { x: 90, sentido: "contrario" },
+            { x: 150, sentido: "contrario" },
+            { x: 210, sentido: "mesmo" },
+            { x: 270, sentido: "mesmo" }
+        ];
 
-        // Escolhe uma faixa aleatoriamente
+        // Escolhe uma faixa aleatória
         const faixa = faixas[
             Math.floor(Math.random() * faixas.length)
         ];
 
-        // Imagens disponíveis para os carros inimigos
-        const imagens = [
-            "assets/cars/car_red_2.png",
-            "assets/cars/car_green_3.png",
-            "assets/cars/car_yellow_5.png",
-            "assets/cars/car_black_4.png"
+        // Veículos que aparecem no trânsito
+        const veiculos = [
+            {
+                imagem: "Car_Lancia_Delta_Integrale_Yellow_86x145.png",
+                largura: 48,
+                altura: 82
+            },
+            {
+                imagem: "Car_Lancia_Delta_Integrale_Police_86x145.png",
+                largura: 48,
+                altura: 82
+            },
+            {
+                imagem: "Car_AM_General_Hummer_98x164.png",
+                largura: 48,
+                altura: 82
+            },
+            {
+                imagem: "Truck_A_139x353.png",
+                largura: 48,
+                altura: 122
+            },
+            {
+                imagem: "Truck_B_139x353.png",
+                largura: 48,
+                altura: 122
+            }
         ];
 
-        // Escolhe uma imagem aleatoriamente
-        const imagemAleatoria = imagens[
-            Math.floor(Math.random() * imagens.length)
+        // Escolhe um veículo aleatório
+        const veiculo = veiculos[
+            Math.floor(Math.random() * veiculos.length)
         ];
 
-        // Chama o construtor da classe Carro
-        super(faixa, -80, "#ff4545", imagemAleatoria);
-    }
+        // Centraliza o veículo na faixa
+        const x = faixa.x + (40 - veiculo.largura) / 2;
 
-    desenhar(ctx) {
-        // Salva as configurações do Canvas
-        ctx.save();
+        // Faz o veículo nascer fora da tela
+        const y = -veiculo.altura;
 
-        // Move a origem para o centro do carro
-        ctx.translate(
-            this.x + this.largura / 2,
-            this.y + this.altura / 2
+        super(
+            x,
+            y,
+            "#ff4545",
+            `assets/cars/transito/${veiculo.imagem}`
         );
 
-        // Gira o carro inimigo em 180 graus
-        ctx.rotate(Math.PI);
+        // Define o tamanho do veículo
+        this.largura = veiculo.largura;
+        this.altura = veiculo.altura;
 
-        // Retorna a origem para a posição anterior
-        ctx.translate(
-            -(this.x + this.largura / 2),
-            -(this.y + this.altura / 2)
-        );
-
-        // Reutiliza o método desenhar da classe Carro
-        super.desenhar(ctx);
-
-        // Restaura as configurações do Canvas
-        ctx.restore();
+        // Define o sentido da faixa
+        this.sentido = faixa.sentido;
     }
 
     atualizar(velocidade) {
-        // Move o carro inimigo para baixo
-        this.y += velocidade;
+        if (this.sentido === "contrario") {
+            // Veículos na contramão se aproximam mais rápido
+            this.y += velocidade * 1.6;
+        } else {
+            // Veículos no mesmo sentido se aproximam mais devagar
+            this.y += velocidade * 0.7;
+        }
+    }
+
+    desenhar(ctx) {
+        if (this.sentido === "contrario") {
+            // Gira os veículos que vêm na contramão
+            ctx.save();
+
+            ctx.translate(
+                this.x + this.largura / 2,
+                this.y + this.altura / 2
+            );
+
+            ctx.rotate(Math.PI);
+
+            if (
+                this.imagem &&
+                this.imagem.complete &&
+                this.imagem.naturalWidth > 0
+            ) {
+                ctx.drawImage(
+                    this.imagem,
+                    -this.largura / 2,
+                    -this.altura / 2,
+                    this.largura,
+                    this.altura
+                );
+            } else {
+                ctx.fillStyle = this.cor;
+
+                ctx.fillRect(
+                    -this.largura / 2,
+                    -this.altura / 2,
+                    this.largura,
+                    this.altura
+                );
+            }
+
+            ctx.restore();
+        } else {
+            // Veículos no mesmo sentido
+            super.desenhar(ctx);
+        }
     }
 }

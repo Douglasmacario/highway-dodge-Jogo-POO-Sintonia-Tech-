@@ -80,3 +80,68 @@
 #jogar:active {
     transform: scale(0.98);
 }
+
+
+/* Painel de controles do menu inicial */
+
+.painel-controles {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 32px;
+    margin: 20px 0;
+}
+
+.grupo-controles {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.grupo-controles strong {
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.tecla-cima,
+.teclas-baixo {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.painel-controles kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 38px;
+    height: 38px;
+
+    background: #252535;
+    color: #ffffff;
+
+    border: 1px solid #77778a;
+    border-bottom: 3px solid #555568;
+    border-radius: 7px;
+
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.instrucoes-jogo {
+    text-align: center;
+    margin: 12px 0;
+    font-size: 14px;
+}
+
+.informacoes-jogo {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+

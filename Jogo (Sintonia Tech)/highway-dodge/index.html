@@ -1,16 +1,20 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Highway Dodge</title>
+
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/inicio.css">
+    <link rel="stylesheet" href="css/garagem.css">
 </head>
+
 <body>
 
-    <!-- TELA INICIAL -->
+    <!-- MENU INICIAL -->
     <section id="telaInicial">
         <h1>HIGHWAY DODGE</h1>
 
@@ -18,23 +22,72 @@
 
         <div class="instrucoes">
             <h2>Como jogar</h2>
-            <p>Use as setas ← → ou as teclas A e D para movimentar o carro.</p>
-            <p>Evite colisões e alcance a maior pontuação!</p>
+
+            <p>Use WASD ou as setas para movimentar o carro.</p>
+            <p>Segure W ou ↑ no topo da pista para ativar o impulso!</p>
+            <p>Evite colisões, ganhe pontos e desbloqueie carros.</p>
+
+            <div class="painel-controles">
+                <div class="grupo-controles">
+                    <strong>Teclado</strong>
+                    <div class="tecla-cima">
+                        <kbd>W</kbd>
+                    </div>
+                    <div class="teclas-baixo">
+                        <kbd>A</kbd>
+                        <kbd>S</kbd>
+                        <kbd>D</kbd>
+                    </div>
+                </div>
+
+                <div class="grupo-controles">
+                    <strong>Setas</strong>
+                    <div class="tecla-cima">
+                        <kbd>↑</kbd>
+                    </div>
+                    <div class="teclas-baixo">
+                        <kbd>←</kbd>
+                        <kbd>↓</kbd>
+                        <kbd>→</kbd>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <button id="jogar">JOGAR</button>
+        <button id="abrirGaragem">GARAGEM</button>
+    </section>
+
+    <!-- GARAGEM -->
+    <section id="telaGaragem" hidden>
+        <h1>GARAGEM</h1>
+
+        <p>
+            Pontos acumulados:
+            <span id="pontosTotais">0</span>
+        </p>
+
+        <div id="listaCarros"></div>
+
+        <button id="voltarGaragem">Voltar ao menu</button>
     </section>
 
     <!-- TELA DO JOGO -->
     <main id="telaJogo" hidden>
         <h1>Highway Dodge</h1>
 
-        <p>Pontuação: <span id="pontuacao">0</span></p>
-        <p>Recorde: <span id="recorde">0</span></p>
+        <div class="informacoes-jogo">
+            <p>Pontuação: <span id="pontuacao">0</span></p>
+            <p>Recorde: <span id="recorde">0</span></p>
+            <p>Impulso: <span id="estadoImpulso">Inativo</span></p>
+        </div>
 
-        <canvas id="jogo" width="400" height="600"></canvas>
+        <canvas id="jogo" width="400" height="600" aria-label="Pista do jogo Highway Dodge"></canvas>
 
-        <p>Use as setas ← → ou A e D para desviar dos carros.</p>
+        <div class="instrucoes-jogo">
+            <p><strong>Movimento:</strong> WASD ou setas.</p>
+            <p><strong>Impulso:</strong> segure W ou ↑ ao chegar ao topo.</p>
+        </div>
 
         <button id="iniciar">Iniciar jogo</button>
         <button id="reiniciar" hidden>Reiniciar jogo</button>
@@ -43,4 +96,5 @@
 
     <script type="module" src="js/script.js"></script>
 </body>
+
 </html>

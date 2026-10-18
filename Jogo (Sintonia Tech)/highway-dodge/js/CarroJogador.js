@@ -1,27 +1,71 @@
 
 import { Carro } from "./Carro.js";
 
-// Classe responsável pelo carro do jogador
 export class CarroJogador extends Carro {
     constructor() {
-        super(180, 490, "#32a8ff", "assets/cars/car_blue_1.png");
-        this.velocidade = 5;
+        super(
+            260,
+            490,
+            "#32a8ff",
+            "assets/cars/car_blue_1.png"
+        );
+
+        this.largura = 48;
+        this.altura = 82;
+
+        this.velocidadeLateral = 5;
+        this.velocidadeFrente = 2;
+        this.velocidadeTras = 3;
+
+        this.limiteEsquerdo = 65;
+        this.limiteDireito = 295;
+
+        this.limiteSuperior = 20;
+        this.limiteInferior = 510;
     }
 
     atualizar(teclas) {
-        // Movimentação para a esquerda
+        let movimentoX = 0;
+        let movimentoY = 0;
+
         if (teclas["ArrowLeft"] || teclas["a"]) {
-            this.x -= this.velocidade;
+            movimentoX -= this.velocidadeLateral;
         }
 
-        // Movimentação para a direita
         if (teclas["ArrowRight"] || teclas["d"]) {
-            this.x += this.velocidade;
+            movimentoX += this.velocidadeLateral;
         }
 
-        // Impede que o carro saia da pista
-        this.x = Math.max(65, this.x);
-        this.x = Math.min(295, this.x);
+        if (teclas["ArrowUp"] || teclas["w"]) {
+            movimentoY -= this.velocidadeFrente;
+        }
+
+        if (teclas["ArrowDown"] || teclas["s"]) {
+            movimentoY += this.velocidadeTras;
+        }
+
+        // Evita movimento diagonal exagerado
+        if (movimentoX !== 0 && movimentoY !== 0) {
+            movimentoX *= Math.SQRT1_2;
+            movimentoY *= Math.SQRT1_2;
+        }
+
+        this.x += movimentoX;
+        this.y += movimentoY;
+
+        // Mantém o carro dentro da pista
+        this.x = Math.max(
+            this.limiteEsquerdo,
+            Math.min(this.limiteDireito, this.x)
+        );
+
+        this.y = Math.max(
+            this.limiteSuperior,
+            Math.min(this.limiteInferior, this.y)
+        );
+    }
+
+    estaNoTopo() {
+        return this.y <= this.limiteSuperior + 0.5;
     }
 }
-

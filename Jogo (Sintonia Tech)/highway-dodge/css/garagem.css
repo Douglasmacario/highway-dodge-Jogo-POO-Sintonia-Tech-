@@ -1,0 +1,138 @@
+
+/* TELA DA GARAGEM */
+
+#telaGaragem {
+    min-height: 100vh;
+    padding: 40px 20px;
+    box-sizing: border-box;
+    background: linear-gradient(135deg, #141824, #252d42);
+    color: white;
+    text-align: center;
+}
+
+#telaGaragem[hidden] {
+    display: none;
+}
+
+#telaGaragem h1 {
+    font-size: 42px;
+    color: #ffcc33;
+    margin-bottom: 15px;
+}
+
+#telaGaragem > p {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+/* LISTA DE CARROS */
+
+#listaCarros {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto 30px;
+}
+
+/* CARD DE CADA CARRO */
+
+.card-carro {
+    background: #30394d;
+    border: 2px solid #48536b;
+    border-radius: 12px;
+    padding: 20px;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.card-carro:hover {
+    transform: translateY(-5px);
+}
+
+.card-carro img {
+    width: 75px;
+    height: 130px;
+    object-fit: contain;
+    margin: 10px auto;
+    display: block;
+}
+
+.card-carro h3 {
+    font-size: 18px;
+    margin: 12px 0;
+}
+
+/* CARRO BLOQUEADO */
+
+.card-carro.bloqueado {
+    opacity: 0.6;
+}
+
+.card-carro.bloqueado img {
+    filter: grayscale(100%);
+}
+
+/* CARRO SELECIONADO */
+
+.card-carro.selecionado {
+    border-color: #ffcc33;
+    box-shadow: 0 0 15px rgba(255, 204, 51, 0.3);
+}
+
+/* BOTÕES DOS CARROS */
+
+.card-carro button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background: #ffcc33;
+    color: #171717;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.card-carro button:hover:not(:disabled) {
+    background: #ffe080;
+}
+
+.card-carro button:disabled {
+    background: #697184;
+    color: #dddddd;
+    cursor: not-allowed;
+}
+
+/* VOLTAR AO MENU */
+
+#voltarGaragem {
+    padding: 12px 28px;
+    background: #ffcc33;
+    color: #171717;
+    font-weight: bold;
+}
+
+#voltarGaragem:hover {
+    background: #ffe080;
+}
+
+/* CELULARES */
+
+@media (max-width: 600px) {
+    #telaGaragem h1 {
+        font-size: 32px;
+    }
+
+    #listaCarros {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .card-carro {
+        padding: 12px;
+    }
+
+    .card-carro img {
+        width: 60px;
+        height: 105px;
+    }
+}
