@@ -1,6 +1,6 @@
-import { Carro } from "./Carro.js";
-import {CarroJogador} from "./CarroJogador.js";
-import {CarroInimigo} from "./CarroInimigo.js";
+
+import { CarroJogador } from "./CarroJogador.js";
+import { CarroInimigo } from "./CarroInimigo.js";
 import { Jogo } from "./Jogo.js";
 
 const canvas = document.getElementById("jogo");
@@ -11,12 +11,6 @@ const textoPontuacao = document.getElementById("pontuacao");
 const botaoReiniciar = document.getElementById("reiniciar");
 
 const teclas = {};
-let jogoAtivo = true;
-let pontuacao = 0;
-let quadros = 0;
-let velocidade = 3;
-let carrosInimigos = [];
-
 
 // OBJETOS DO JOGO
 const jogador = new CarroJogador();
@@ -42,12 +36,11 @@ function desenharPista() {
     ctx.setLineDash([]);
 }
 
-
 // CICLO PRINCIPAL
 function atualizarJogo() {
-    if (!jogoAtivo) return;
+    if (!jogo.jogoAtivo) return;
 
-    quadros++;
+    jogo.quadros++;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -57,36 +50,34 @@ function atualizarJogo() {
     jogador.desenhar(ctx);
 
     // Cria um novo adversário periodicamente.
-    if (quadros % 65 === 0) {
-        carrosInimigos.push(new CarroInimigo());
+    if (jogo.quadros % 65 === 0) {
+        jogo.carrosInimigos.push(new CarroInimigo());
     }
 
-    // POLIMORFISMO:
-    // jogador e inimigos têm métodos atualizar()
-    // com comportamentos diferentes.
-    for (const carro of carrosInimigos) {
-        carro.atualizar(velocidade);
+    // POLIMORFISMO
+    for (const carro of jogo.carrosInimigos) {
+        carro.atualizar(jogo.velocidade);
         carro.desenhar(ctx);
 
         if (jogo.colidiu(jogador, carro)) {
-            jogoAtivo = false;
+            jogo.jogoAtivo = false;
         }
     }
 
     // Remove carros que saíram da tela.
-    carrosInimigos = carrosInimigos.filter(
+    jogo.carrosInimigos = jogo.carrosInimigos.filter(
         carro => carro.y < canvas.height
     );
 
-    pontuacao++;
-    textoPontuacao.textContent = Math.floor(pontuacao / 10);
+    jogo.pontuacao++;
+    textoPontuacao.textContent = Math.floor(jogo.pontuacao / 10);
 
     // Aumenta a dificuldade gradualmente.
-    if (quadros % 600 === 0) {
-        velocidade += 0.5;
+    if (jogo.quadros % 600 === 0) {
+        jogo.velocidade += 0.5;
     }
 
-    if (jogoAtivo) {
+    if (jogo.jogoAtivo) {
         requestAnimationFrame(atualizarJogo);
     } else {
         ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
@@ -99,7 +90,7 @@ function atualizarJogo() {
 
         ctx.font = "18px Arial";
         ctx.fillText(
-            "Pontuação: " + Math.floor(pontuacao / 10),
+            "Pontuação: " + Math.floor(jogo.pontuacao / 10),
             200,
             320
         );
@@ -110,9 +101,7 @@ function atualizarJogo() {
 document.addEventListener("keydown", event => {
     teclas[event.key] = true;
 
-    if (
-        ["ArrowLeft", "ArrowRight", " "].includes(event.key)
-    ) {
+    if (["ArrowLeft", "ArrowRight", " "].includes(event.key)) {
         event.preventDefault();
     }
 });
@@ -126,11 +115,9 @@ botaoReiniciar.addEventListener("click", () => {
     jogador.x = 180;
     jogador.y = 490;
 
-    carrosInimigos = [];
-    pontuacao = 0;
-    quadros = 0;
-    velocidade = 3;
-    jogoAtivo = true;
+    jogo.reiniciar();
+
+    textoPontuacao.textContent = 0;
 
     for (const tecla in teclas) {
         teclas[tecla] = false;
