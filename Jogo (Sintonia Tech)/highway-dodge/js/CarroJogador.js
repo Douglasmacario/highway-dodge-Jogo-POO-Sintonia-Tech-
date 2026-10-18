@@ -4,7 +4,7 @@ import { Carro } from "./Carro.js";
 // Classe responsável pelo carro do jogador
 export class CarroJogador extends Carro {
     constructor() {
-        super(180, 490, "#32a8ff");
+        super(180, 490, "#32a8ff", "assets/cars/car_blue_1.png");
         this.velocidade = 5;
     }
 
@@ -24,3 +24,4 @@ export class CarroJogador extends Carro {
         this.x = Math.min(295, this.x);
     }
 }
+

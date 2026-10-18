@@ -6,17 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Highway Dodge</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/inicio.css">
 </head>
 <body>
-    <h1>Highway Dodge</h1>
 
-    <p>Pontuação: <span id="pontuacao">0</span></p>
+    <!-- TELA INICIAL -->
+    <section id="telaInicial">
+        <h1>HIGHWAY DODGE</h1>
 
-    <canvas id="jogo" width="400" height="600"></canvas>
+        <p>Desvie dos carros e sobreviva o máximo possível!</p>
 
-    <p>Use as setas ← → para desviar dos carros.</p>
+        <div class="instrucoes">
+            <h2>Como jogar</h2>
+            <p>Use as setas ← → ou as teclas A e D para movimentar o carro.</p>
+            <p>Evite colisões e alcance a maior pontuação!</p>
+        </div>
 
-    <button id="reiniciar">Reiniciar jogo</button>
+        <button id="jogar">JOGAR</button>
+    </section>
+
+    <!-- TELA DO JOGO -->
+    <main id="telaJogo" hidden>
+        <h1>Highway Dodge</h1>
+
+        <p>Pontuação: <span id="pontuacao">0</span></p>
+        <p>Recorde: <span id="recorde">0</span></p>
+
+        <canvas id="jogo" width="400" height="600"></canvas>
+
+        <p>Use as setas ← → ou A e D para desviar dos carros.</p>
+
+        <button id="iniciar">Iniciar jogo</button>
+        <button id="reiniciar" hidden>Reiniciar jogo</button>
+        <button id="voltarMenu">Voltar ao menu</button>
+    </main>
 
     <script type="module" src="js/script.js"></script>
 </body>

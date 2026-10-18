@@ -5,9 +5,14 @@ export class Jogo {
         this.ctx = canvas.getContext("2d");
 
         this.pontuacao = 0;
+        this.recorde = 0;
         this.quadros = 0;
-        this.velocidade = 3;
-        this.jogoAtivo = true;
+
+        // Configurações de velocidade
+        this.velocidadeInicial = 1.5;
+        this.velocidade = this.velocidadeInicial;
+
+        this.jogoAtivo = false;
         this.carrosInimigos = [];
     }
 
@@ -20,11 +25,19 @@ export class Jogo {
         );
     }
 
+    atualizarRecorde() {
+        const pontuacaoAtual = Math.floor(this.pontuacao / 10);
+
+        if (pontuacaoAtual > this.recorde) {
+            this.recorde = pontuacaoAtual;
+        }
+    }
+
     reiniciar() {
         this.carrosInimigos = [];
         this.pontuacao = 0;
         this.quadros = 0;
-        this.velocidade = 3;
-        this.jogoAtivo = true;
+        this.velocidade = this.velocidadeInicial;
+        this.jogoAtivo = false;
     }
 }

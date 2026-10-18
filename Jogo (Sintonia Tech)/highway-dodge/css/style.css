@@ -11,10 +11,15 @@ body {
 canvas {
     display: block;
     margin: 0 auto;
+
+    /* Aumenta o tamanho visual do jogo */
+    width: 500px;
     max-width: 100%;
     height: auto;
+
     border: 3px solid white;
     background: #444;
+    box-sizing: border-box;
 }
 
 button {
