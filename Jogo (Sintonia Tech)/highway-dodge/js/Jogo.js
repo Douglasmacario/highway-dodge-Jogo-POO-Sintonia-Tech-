@@ -8,15 +8,13 @@ export class Jogo {
         this.recorde = 0;
         this.quadros = 0;
 
-        // Velocidade inicial
-        this.velocidadeInicial = 4;
+        this.velocidadeInicial = 3.2;
         this.velocidade = this.velocidadeInicial;
 
         this.jogoAtivo = false;
         this.carrosInimigos = [];
     }
 
-    // Define uma área de colisão menor que a imagem
     obterHitbox(carro) {
         const margemX = carro.largura * 0.20;
         const margemY = carro.altura * 0.15;
@@ -29,7 +27,6 @@ export class Jogo {
         };
     }
 
-    // Verifica colisão entre dois veículos
     colidiu(carroA, carroB) {
         const a = this.obterHitbox(carroA);
         const b = this.obterHitbox(carroB);
@@ -42,7 +39,6 @@ export class Jogo {
         );
     }
 
-    // Atualiza o recorde da sessão
     atualizarRecorde() {
         const pontos = Math.floor(this.pontuacao / 10);
 
@@ -51,7 +47,6 @@ export class Jogo {
         }
     }
 
-    // Reinicia a partida
     reiniciar() {
         this.carrosInimigos = [];
         this.pontuacao = 0;

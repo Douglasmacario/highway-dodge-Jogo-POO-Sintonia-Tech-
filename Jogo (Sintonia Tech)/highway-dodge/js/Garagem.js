@@ -1,7 +1,6 @@
 
 export class Garagem {
     constructor() {
-        // Carros disponíveis na garagem
         this.carros = [
             {
                 id: "audi",
@@ -35,51 +34,47 @@ export class Garagem {
             }
         ];
 
-        // Recupera os pontos acumulados
-        const pontosSalvos = Number(
-            localStorage.getItem("highwayDodgePontos")
+        // Carrega o maior recorde salvo
+        const recordeSalvo = Number(
+            localStorage.getItem("highwayDodgeRecorde")
         );
 
-        this.pontosTotais =
-            Number.isFinite(pontosSalvos) && pontosSalvos >= 0
-                ? pontosSalvos
-                : 0;
+        this.recorde = Number.isFinite(recordeSalvo) &&
+            recordeSalvo >= 0
+            ? recordeSalvo
+            : 0;
 
-        // Recupera o carro escolhido
+        // Carrega o carro selecionado
         this.carroSelecionado =
             localStorage.getItem("highwayDodgeCarro") || "audi";
 
-        // Corrige seleções antigas ou bloqueadas
+        // Impede usar carro que não foi desbloqueado
         if (!this.podeUsar(this.carroSelecionado)) {
             this.carroSelecionado = "audi";
             this.salvar();
         }
     }
 
-    // Verifica se o carro está desbloqueado
     podeUsar(id) {
-        const carro = this.carros.find(
-            carro => carro.id === id
-        );
+        const carro = this.carros.find(c => c.id === id);
 
-        if (!carro) {
-            return false;
-        }
-
-        return this.pontosTotais >= carro.pontosNecessarios;
+        return !!carro &&
+            this.recorde >= carro.pontosNecessarios;
     }
 
-    // Adiciona pontos ao progresso
-    adicionarPontos(pontos) {
-        if (!Number.isFinite(pontos) || pontos <= 0) {
+    atualizarRecorde(pontos) {
+        if (!Number.isFinite(pontos) || pontos < 0) {
             return;
         }
 
-        this.pontosTotais += Math.floor(pontos);
-        this.salvar();
+        const novoRecorde = Math.floor(pontos);
+
+        if (novoRecorde > this.recorde) {
+            this.recorde = novoRecorde;
+            this.salvar();
+        }
     }
 
-    // Seleciona um carro desbloqueado
     selecionarCarro(id) {
         if (!this.podeUsar(id)) {
             return false;
@@ -91,18 +86,16 @@ export class Garagem {
         return true;
     }
 
-    // Retorna o carro selecionado
     obterCarroSelecionado() {
         return this.carros.find(
-            carro => carro.id === this.carroSelecionado
+            c => c.id === this.carroSelecionado
         );
     }
 
-    // Salva o progresso no navegador
     salvar() {
         localStorage.setItem(
-            "highwayDodgePontos",
-            this.pontosTotais
+            "highwayDodgeRecorde",
+            this.recorde
         );
 
         localStorage.setItem(

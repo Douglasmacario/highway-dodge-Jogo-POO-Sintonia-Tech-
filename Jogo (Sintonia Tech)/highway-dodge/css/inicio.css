@@ -1,96 +1,77 @@
-
-/* TELA INICIAL */
+/* Tela inicial com identidade visual do jogo */
 
 #telaInicial {
-    min-height: calc(100vh - 40px);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
+    width: 100%;
+    max-width: 650px;
+    margin: 25px auto;
+    padding: 35px 30px;
 
-    background: linear-gradient(135deg, #141820, #293443);
-    border-radius: 12px;
-    box-sizing: border-box;
-    padding: 30px 20px;
+    background: linear-gradient(145deg,
+            #1c2a3c,
+            #101a29);
+
+    border: 1px solid #34475f;
+    border-radius: 18px;
+
+    box-shadow: 0 20px 55px rgba(0, 0, 0, 0.35);
 }
-
-#telaInicial[hidden] {
-    display: none;
-}
-
-/* TÍTULO */
 
 #telaInicial h1 {
-    font-size: clamp(36px, 7vw, 70px);
-    font-weight: 900;
-    color: #ffcc00;
-    margin: 0;
-    letter-spacing: 4px;
-    text-shadow: 4px 4px 0 #000;
+    margin: 0 0 18px;
+
+    color: #ffffff;
+    font-size: clamp(30px, 6vw, 44px);
+    font-weight: 800;
+    letter-spacing: 2px;
 }
 
-/* DESCRIÇÃO */
-
-#telaInicial > p {
-    font-size: 19px;
-    color: #ddd;
-    margin: 0;
-}
-
-/* INSTRUÇÕES */
-
-.instrucoes {
-    background: rgba(0, 0, 0, 0.35);
-    border: 1px solid #485365;
-    border-radius: 12px;
-    padding: 20px 30px;
-    max-width: 450px;
-}
-
-.instrucoes h2 {
-    color: #ffcc00;
-    margin-top: 0;
-}
-
-.instrucoes p {
-    color: #ddd;
+#telaInicial>p {
+    color: #b7c7da;
+    font-size: 16px;
     line-height: 1.6;
 }
 
-/* BOTÃO JOGAR */
+#telaInicial .instrucoes {
+    margin: 28px 0;
+    padding: 22px;
 
-#jogar {
-    background: #ffcc00;
-    color: #171717;
-    font-size: 22px;
-    font-weight: bold;
-    padding: 16px 65px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: transform 0.2s, background 0.2s;
+    background: rgba(10, 18, 30, 0.6);
+    border: 1px solid #34475f;
+    border-radius: 12px;
 }
 
-#jogar:hover {
-    background: #ffe066;
-    transform: scale(1.06);
+#telaInicial .instrucoes h2 {
+    margin-top: 0;
+    color: #ffffff;
 }
 
-#jogar:active {
-    transform: scale(0.98);
+#telaInicial .instrucoes p {
+    color: #c5d0df;
+    line-height: 1.6;
 }
 
+#telaInicial button {
+    min-width: 145px;
+    margin: 5px;
+}
 
-/* Painel de controles do menu inicial */
+#telaInicial #jogar {
+    background: #3974b8;
+    border-color: #5694da;
+}
+
+#telaInicial #jogar:hover {
+    background: #4b8cd4;
+}
+
+/* Controles visuais */
 
 .painel-controles {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
     flex-wrap: wrap;
-    gap: 32px;
-    margin: 20px 0;
+    gap: 35px;
+    margin-top: 22px;
 }
 
 .grupo-controles {
@@ -102,14 +83,14 @@
 
 .grupo-controles strong {
     font-size: 14px;
-    color: #ffffff;
+    color: #dce8f7;
 }
 
 .tecla-cima,
 .teclas-baixo {
     display: flex;
     justify-content: center;
-    gap: 5px;
+    gap: 6px;
 }
 
 .painel-controles kbd {
@@ -117,31 +98,32 @@
     align-items: center;
     justify-content: center;
 
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
 
-    background: #252535;
+    background: #263950;
     color: #ffffff;
 
-    border: 1px solid #77778a;
-    border-bottom: 3px solid #555568;
+    border: 1px solid #607b9a;
+    border-bottom: 3px solid #405a76;
     border-radius: 7px;
 
-    font-family: Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 16px;
     font-weight: bold;
 }
 
-.instrucoes-jogo {
-    text-align: center;
-    margin: 12px 0;
-    font-size: 14px;
-}
+@media (max-width: 600px) {
+    #telaInicial {
+        margin: 10px auto;
+        padding: 25px 16px;
+    }
 
-.informacoes-jogo {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 16px;
-}
+    #telaInicial .instrucoes {
+        padding: 18px 12px;
+    }
 
+    .painel-controles {
+        gap: 22px;
+    }
+}

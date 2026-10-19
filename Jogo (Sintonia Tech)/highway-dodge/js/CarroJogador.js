@@ -13,9 +13,11 @@ export class CarroJogador extends Carro {
         this.largura = 48;
         this.altura = 82;
 
-        this.velocidadeLateral = 5;
+        this.velocidadeLateralInicial = 2.5;
+        this.velocidadeLateral = this.velocidadeLateralInicial;
+
         this.velocidadeFrente = 2;
-        this.velocidadeTras = 3;
+        this.velocidadeTras = 2.5;
 
         this.limiteEsquerdo = 65;
         this.limiteDireito = 295;
@@ -24,7 +26,7 @@ export class CarroJogador extends Carro {
         this.limiteInferior = 510;
     }
 
-    atualizar(teclas) {
+    atualizar(teclas, delta = 1) {
         let movimentoX = 0;
         let movimentoY = 0;
 
@@ -44,16 +46,14 @@ export class CarroJogador extends Carro {
             movimentoY += this.velocidadeTras;
         }
 
-        // Evita movimento diagonal exagerado
         if (movimentoX !== 0 && movimentoY !== 0) {
             movimentoX *= Math.SQRT1_2;
             movimentoY *= Math.SQRT1_2;
         }
 
-        this.x += movimentoX;
-        this.y += movimentoY;
+        this.x += movimentoX * delta;
+        this.y += movimentoY * delta;
 
-        // Mantém o carro dentro da pista
         this.x = Math.max(
             this.limiteEsquerdo,
             Math.min(this.limiteDireito, this.x)
@@ -65,7 +65,7 @@ export class CarroJogador extends Carro {
         );
     }
 
-    estaNoTopo() {
-        return this.y <= this.limiteSuperior + 0.5;
+    reiniciarVelocidade() {
+        this.velocidadeLateral = this.velocidadeLateralInicial;
     }
 }
