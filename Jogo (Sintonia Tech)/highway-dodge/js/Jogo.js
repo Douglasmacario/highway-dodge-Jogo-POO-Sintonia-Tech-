@@ -16,8 +16,8 @@ export class Jogo {
     }
 
     obterHitbox(carro) {
-        const margemX = carro.largura * 0.20;
-        const margemY = carro.altura * 0.15;
+        const margemX = carro.largura * 0.10;
+        const margemY = carro.altura * 0.18;
 
         return {
             x: carro.x + margemX,

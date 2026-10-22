@@ -44,7 +44,7 @@ const AUMENTO_VELOCIDADE = 0.25;
 
 // BÔNUS DE ULTRAPASSAGEM
 const BONUS_ULTRAPASSAGEM = 5;
-const DISTANCIA_ULTRAPASSAGEM = 12;
+const DISTANCIA_ULTRAPASSAGEM = 20;
 
 const NIVEIS_DIFICULDADE = [
     { pontos: 0, lateral: 2.5, bonus: 0 },
@@ -558,10 +558,14 @@ function verificarUltrapassagem(carro) {
     } else if (direitaInimigo <= esquerdaJogador) {
         distanciaHorizontal =
             esquerdaJogador - direitaInimigo;
-    } else {
-        // As imagens se sobrepõem horizontalmente.
-        // Não considera uma ultrapassagem arriscada válida.
-        distanciaHorizontal = -1;
+        } else {
+        // Imagens se sobrepõem na horizontal
+        const sobreposicao =
+            Math.min(direitaJogador, direitaInimigo) -
+            Math.max(esquerdaJogador, esquerdaInimigo);
+
+        // Roçar na lateral conta; ficar por cima da linha do meio não
+        distanciaHorizontal = sobreposicao <= 10 ? 0 : -1;
     }
 
     // Os veículos precisam estar lado a lado
