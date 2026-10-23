@@ -43,7 +43,7 @@ const INTERVALO_ACELERACAO = 500;
 const AUMENTO_VELOCIDADE = 0.25;
 
 const BONUS_ULTRAPASSAGEM = 5;
-const DISTANCIA_ULTRAPASSAGEM = 20;
+const DISTANCIA_ULTRAPASSAGEM = 6;
 
 // Distância mínima entre ondas de trânsito
 const DISTANCIA_ENTRE_ONDAS = 260;

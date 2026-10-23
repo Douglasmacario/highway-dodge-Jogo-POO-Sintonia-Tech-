@@ -28,6 +28,7 @@ body {
 #telaJogo {
     width: 100%;
     max-width: 850px;
+
     height: calc(100vh - 20px);
     height: calc(100dvh - 20px);
     min-height: 0;
@@ -41,7 +42,7 @@ body {
     gap: 5px;
 }
 
-/* TÍTULO */
+/* TITULO */
 
 #telaJogo h1 {
     margin: 0;
@@ -54,7 +55,7 @@ body {
     flex-shrink: 0;
 }
 
-/* PONTUAÇÃO E RECORDE */
+/* PONTUACAO E RECORDE */
 
 #telaJogo .informacoes-jogo {
     display: flex;
@@ -92,9 +93,14 @@ body {
 #telaJogo #jogo {
     display: block;
 
-    /* Reserva espaço para os botões e instruções */
-    height: min(560px, calc(100dvh - 265px));
+    /*
+       A pista aumenta quando existe espaco.
+       Reserva altura para titulo, informacoes,
+       instrucoes e botoes.
+    */
+
     width: auto;
+    height: min(600px, calc(100dvh - 210px));
 
     max-width: 100%;
     min-height: 0;
@@ -115,7 +121,7 @@ body {
     flex-shrink: 1;
 }
 
-/* INSTRUÇÕES */
+/* INSTRUCOES */
 
 #telaJogo .instrucoes-jogo {
     margin: 0;
@@ -129,7 +135,7 @@ body {
     margin: 1px 0;
 }
 
-/* BOTÕES GERAIS */
+/* BOTOES GERAIS */
 
 button {
     padding: 10px 18px;
@@ -167,7 +173,7 @@ button:disabled {
     cursor: not-allowed;
 }
 
-/* BOTÕES DA PARTIDA */
+/* BOTOES DA PARTIDA */
 
 #telaJogo>button {
     min-width: 160px;
@@ -221,7 +227,7 @@ button:disabled {
     }
 
     #telaJogo #jogo {
-        height: min(530px, calc(100dvh - 230px));
+        height: min(600px, calc(100dvh - 210px));
     }
 
     #telaJogo .instrucoes-jogo {
@@ -264,7 +270,7 @@ button:disabled {
     }
 
     #telaJogo #jogo {
-        height: min(530px, calc(100dvh - 225px));
+        height: min(600px, calc(100dvh - 225px));
         max-width: 100%;
         border-width: 2px;
     }
