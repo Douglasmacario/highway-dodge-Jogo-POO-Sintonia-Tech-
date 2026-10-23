@@ -1,81 +1,103 @@
-
 * {
     box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
 }
 
 body {
     margin: 0;
     min-height: 100vh;
-    padding: 28px 20px;
+    min-height: 100dvh;
+    padding: 12px;
 
     background:
-        radial-gradient(
-            ellipse at top,
+        radial-gradient(ellipse at top,
             #26364b 0%,
             #141c2a 48%,
-            #0b111b 100%
-        );
+            #0b111b 100%);
 
     color: #f5f7fc;
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
 }
 
-/* Área principal do jogo */
+/* TELA DO JOGO */
+
 #telaJogo {
     width: 100%;
     max-width: 850px;
+    height: calc(100vh - 24px);
+    height: calc(100dvh - 24px);
+    min-height: 0;
+
     margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 7px;
 }
 
 #telaJogo h1 {
-    margin: 0 0 20px;
-    font-size: 32px;
+    margin: 0;
+    font-size: clamp(19px, 3vh, 28px);
     font-weight: 800;
     letter-spacing: 1.5px;
     color: #ffffff;
+    flex-shrink: 0;
 }
 
-/* Painel de pontuação e recorde */
-.informacoes-jogo {
+/* PONTUAÇÃO E RECORDE */
+
+#telaJogo .informacoes-jogo {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 10px;
 
-    margin: 0 auto 18px;
+    margin: 0;
+    flex-shrink: 0;
 }
 
-.informacoes-jogo p {
+#telaJogo .informacoes-jogo p {
     margin: 0;
-    padding: 12px 20px;
+    padding: 7px 14px;
 
     background: #1d293a;
     border: 1px solid #35465d;
     border-radius: 10px;
 
     color: #c5d0df;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
 }
 
-.informacoes-jogo span {
+#telaJogo .informacoes-jogo span {
     color: #ffffff;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 800;
     font-variant-numeric: tabular-nums;
 }
 
-/* Pista */
-canvas {
+/* PISTA RESPONSIVA */
+
+#telaJogo #jogo {
     display: block;
 
-    width: 500px;
+    /*
+       A pista mantém a proporção 400x600.
+       A altura se adapta ao espaço da janela.
+    */
+
+    width: auto;
+    height: min(600px, calc(100dvh - 240px));
     max-width: 100%;
-    height: auto;
+
+    aspect-ratio: 2 / 3;
 
     margin: 0 auto;
 
@@ -85,24 +107,30 @@ canvas {
 
     box-shadow:
         0 0 0 5px rgba(255, 255, 255, 0.035),
-        0 18px 45px rgba(0, 0, 0, 0.45);
+        0 12px 30px rgba(0, 0, 0, 0.45);
+
+    object-fit: contain;
+    flex-shrink: 1;
 }
 
-/* Instruções abaixo da pista */
-.instrucoes-jogo {
-    margin: 16px auto;
+/* INSTRUÇÕES DA PARTIDA */
+
+#telaJogo .instrucoes-jogo {
+    margin: 0;
     color: #aebdd0;
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: 12px;
+    line-height: 1.3;
+    flex-shrink: 0;
 }
 
-.instrucoes-jogo p {
-    margin: 5px 0;
+#telaJogo .instrucoes-jogo p {
+    margin: 2px 0;
 }
 
-/* Botões */
+/* BOTÕES GERAIS */
+
 button {
-    padding: 12px 22px;
+    padding: 10px 18px;
 
     border: 1px solid #526681;
     border-radius: 8px;
@@ -111,10 +139,11 @@ button {
     color: #ffffff;
 
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
 
     cursor: pointer;
+
     transition:
         background 0.2s,
         transform 0.2s,
@@ -136,34 +165,167 @@ button:disabled {
     cursor: not-allowed;
 }
 
-#telaJogo > button {
-    margin: 5px;
+/* BOTÕES DA PARTIDA */
+
+#telaJogo>button {
+    min-width: 160px;
+    padding: 9px 18px;
+    margin: 0;
+    flex-shrink: 0;
+
+    background: #304661;
+    border: 1px solid #6883a4;
 }
 
-/* Garante que telas ocultas não apareçam */
+#telaJogo>button:hover:not(:disabled) {
+    background: #42648a;
+    border-color: #9bc5f1;
+}
+
+/* BOTÃO DE INICIAR / REINICIAR */
+
+#iniciar,
+#reiniciar {
+    background: #315d88 !important;
+    border-color: #669cd0 !important;
+}
+
+#iniciar:hover:not(:disabled),
+#reiniciar:hover:not(:disabled) {
+    background: #4079af !important;
+}
+
+/* TELAS OCULTAS */
+
 [hidden] {
     display: none !important;
 }
 
-@media (max-width: 600px) {
-    body {
-        padding: 20px 12px;
+/* NOTEBOOKS COM MENOS ALTURA */
+
+@media (max-height: 800px) {
+    #telaJogo {
+        gap: 5px;
     }
 
     #telaJogo h1 {
-        font-size: 26px;
+        font-size: 22px;
     }
 
-    .informacoes-jogo p {
-        padding: 10px 14px;
-        font-size: 14px;
+    #telaJogo .informacoes-jogo p {
+        padding: 5px 12px;
     }
 
-    .informacoes-jogo span {
-        font-size: 17px;
+    #telaJogo #jogo {
+        height: min(600px, calc(100dvh - 205px));
     }
 
-    canvas {
+    #telaJogo .instrucoes-jogo {
+        font-size: 11px;
+    }
+
+    #telaJogo .instrucoes-jogo p {
+        margin: 1px 0;
+    }
+
+    #telaJogo>button {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+}
+
+/* CELULARES */
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    #telaJogo {
+        height: calc(100dvh - 20px);
+        gap: 5px;
+    }
+
+    #telaJogo h1 {
+        font-size: 21px;
+    }
+
+    #telaJogo .informacoes-jogo {
+        gap: 6px;
+    }
+
+    #telaJogo .informacoes-jogo p {
+        padding: 5px 9px;
+        font-size: 12px;
+    }
+
+    #telaJogo .informacoes-jogo span {
+        font-size: 15px;
+    }
+
+    #telaJogo #jogo {
+        height: min(600px, calc(100dvh - 210px));
+        max-width: 100%;
         border-width: 2px;
     }
+
+    #telaJogo .instrucoes-jogo {
+        font-size: 11px;
+    }
+
+    #telaJogo>button {
+        min-width: 145px;
+    }
+}
+
+/* TELAS MUITO BAIXAS */
+
+@media (max-height: 550px) {
+    body {
+        padding: 6px;
+    }
+
+    #telaJogo {
+        height: calc(100dvh - 12px);
+        gap: 3px;
+    }
+
+    #telaJogo h1 {
+        font-size: 18px;
+    }
+
+    #telaJogo .informacoes-jogo p {
+        padding: 3px 8px;
+        font-size: 11px;
+    }
+
+    #telaJogo .informacoes-jogo span {
+        font-size: 13px;
+    }
+
+    #telaJogo #jogo {
+        height: max(100px, calc(100dvh - 170px));
+    }
+
+    #telaJogo .instrucoes-jogo {
+        font-size: 10px;
+    }
+
+    #telaJogo>button {
+        padding: 5px 12px;
+        font-size: 12px;
+    }
+}
+
+#telaJogo #reiniciar,
+#telaJogo #iniciar {
+    background: #ffcc00 !important;
+    color: #171717;
+    border: 1px solid #ffe066 !important;
+    font-weight: 800;
+}
+
+#telaJogo #reiniciar:hover,
+#telaJogo #iniciar:hover {
+    background: #ffe066 !important;
 }

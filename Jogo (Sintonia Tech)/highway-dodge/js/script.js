@@ -42,9 +42,11 @@ const VELOCIDADE_MAXIMA = 7.5;
 const INTERVALO_ACELERACAO = 500;
 const AUMENTO_VELOCIDADE = 0.25;
 
-// BÔNUS DE ULTRAPASSAGEM
 const BONUS_ULTRAPASSAGEM = 5;
 const DISTANCIA_ULTRAPASSAGEM = 20;
+
+// Distância mínima entre ondas de trânsito
+const DISTANCIA_ENTRE_ONDAS = 260;
 
 const NIVEIS_DIFICULDADE = [
     { pontos: 0, lateral: 2.5, bonus: 0 },
@@ -228,8 +230,10 @@ function desenharPista() {
     ctx.fillStyle = "#242b35";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    if (!imagemRodovia.complete ||
-        !imagemRodovia.naturalWidth) {
+    if (
+        !imagemRodovia.complete ||
+        !imagemRodovia.naturalWidth
+    ) {
         return;
     }
 
@@ -313,6 +317,7 @@ function desenharCena() {
     desenharAvisos();
 }
 
+// Painel da contagem e da pausa
 function desenharPainel(titulo, linhas = [], cor = "#fff") {
     ctx.fillStyle = "rgba(8, 15, 25, 0.88)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -543,7 +548,6 @@ function atualizarDificuldade(pontos) {
 function verificarUltrapassagem(carro) {
     if (carro.bonusConcedido) return;
 
-    // Bordas visuais dos dois veículos
     const esquerdaJogador = jogador.x;
     const direitaJogador = jogador.x + jogador.largura;
 
@@ -558,22 +562,19 @@ function verificarUltrapassagem(carro) {
     } else if (direitaInimigo <= esquerdaJogador) {
         distanciaHorizontal =
             esquerdaJogador - direitaInimigo;
-        } else {
-        // Imagens se sobrepõem na horizontal
+    } else {
+        // Permite uma leve sobreposição visual
         const sobreposicao =
             Math.min(direitaJogador, direitaInimigo) -
             Math.max(esquerdaJogador, esquerdaInimigo);
 
-        // Roçar na lateral conta; ficar por cima da linha do meio não
         distanciaHorizontal = sobreposicao <= 10 ? 0 : -1;
     }
 
-    // Os veículos precisam estar lado a lado
     const ladoALado =
         jogador.y < carro.y + carro.altura &&
         jogador.y + jogador.altura > carro.y;
 
-    // Registra apenas uma passagem realmente próxima
     if (
         ladoALado &&
         distanciaHorizontal >= 0 &&
@@ -582,7 +583,6 @@ function verificarUltrapassagem(carro) {
         carro.passouPerto = true;
     }
 
-    // O veículo do trânsito terminou de passar
     const passagemConcluida =
         carro.y >= jogador.y + jogador.altura;
 
@@ -590,8 +590,6 @@ function verificarUltrapassagem(carro) {
         carro.bonusConcedido = true;
 
         if (carro.passouPerto) {
-            // A pontuação interna é dividida por 10
-            // na interface, então 5 pontos = 50 unidades.
             jogo.pontuacao += BONUS_ULTRAPASSAGEM * 10;
 
             totalUltrapassagens++;
@@ -601,9 +599,10 @@ function verificarUltrapassagem(carro) {
 }
 
 // ==========================
-// TRÂNSITO
+// TRÂNSITO EM ONDAS
 // ==========================
 
+// Identifica a faixa ocupada pelo veículo
 function identificarFaixa(carro) {
     const centro = carro.x + carro.largura / 2;
 
@@ -624,6 +623,45 @@ function identificarFaixa(carro) {
     return melhorFaixa;
 }
 
+// Embaralha as faixas para variar as ondas
+function embaralharFaixas() {
+    const faixas = [0, 1, 2, 3];
+
+    for (let i = faixas.length - 1; i > 0; i--) {
+        const indice = Math.floor(
+            Math.random() * (i + 1)
+        );
+
+        [faixas[i], faixas[indice]] =
+            [faixas[indice], faixas[i]];
+    }
+
+    return faixas;
+}
+
+// Decide quantos carros aparecerão na onda
+function escolherQuantidadeCarros(pontos) {
+    const sorteio = Math.random();
+
+    // Começo: maioria das ondas com 1 carro
+    if (pontos < 200) {
+        return sorteio < 0.75 ? 1 : 2;
+    }
+
+    // Dificuldade intermediária
+    if (pontos < 500) {
+        if (sorteio < 0.45) return 1;
+        if (sorteio < 0.85) return 2;
+        return 3;
+    }
+
+    // Dificuldade maior
+    if (sorteio < 0.20) return 1;
+    if (sorteio < 0.65) return 2;
+    return 3;
+}
+
+// Confere se uma faixa tem espaço para outro carro
 function faixaEstaLivre(faixa, novoCarro) {
     return jogo.carrosInimigos.every(carro => {
         if (identificarFaixa(carro) !== faixa) {
@@ -633,55 +671,77 @@ function faixaEstaLivre(faixa, novoCarro) {
         const distancia =
             carro.y - (novoCarro.y + novoCarro.altura);
 
-        return distancia >= 220;
+        return distancia >= DISTANCIA_ENTRE_ONDAS;
     });
 }
 
-function existeRotaDeFuga(faixaEscolhida, novoCarro) {
-    const ocupadas = new Set([faixaEscolhida]);
-
-    for (const carro of jogo.carrosInimigos) {
-        const centroAtual =
-            carro.y + carro.altura / 2;
-
-        const centroNovo =
-            novoCarro.y + novoCarro.altura / 2;
-
-        if (Math.abs(centroAtual - centroNovo) < 260) {
-            ocupadas.add(identificarFaixa(carro));
+// Evita criar ondas coladas em carros anteriores
+function ondaPodeAparecer(novosCarros) {
+    for (const novoCarro of novosCarros) {
+        if (
+            !faixaEstaLivre(
+                identificarFaixa(novoCarro),
+                novoCarro
+            )
+        ) {
+            return false;
         }
     }
 
-    return ocupadas.size <= 2;
+    // Verifica se não existe outra onda muito próxima
+    for (const carro of jogo.carrosInimigos) {
+        const distancia =
+            carro.y - Math.max(
+                ...novosCarros.map(novo => novo.y + novo.altura)
+            );
+
+        if (
+            distancia >= 0 &&
+            distancia < DISTANCIA_ENTRE_ONDAS
+        ) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
-function criarVeiculoSeguro() {
-    const indices = [0, 1, 2, 3];
+// Cria 1, 2 ou 3 carros na mesma onda
+function criarOndaDeCarros() {
+    const pontos = Math.floor(jogo.pontuacao / 10);
+    const quantidade = escolherQuantidadeCarros(pontos);
 
-    for (let i = indices.length - 1; i > 0; i--) {
-        const aleatorio = Math.floor(
-            Math.random() * (i + 1)
+    const faixas = embaralharFaixas();
+
+    // Evita repetir sempre a mesma faixa
+    if (faixas[0] === ultimaFaixa) {
+        const indiceTroca = 1 + Math.floor(
+            Math.random() * 3
         );
 
-        [indices[i], indices[aleatorio]] =
-            [indices[aleatorio], indices[i]];
+        [faixas[0], faixas[indiceTroca]] =
+            [faixas[indiceTroca], faixas[0]];
     }
 
-    const indiceAnterior = indices.indexOf(ultimaFaixa);
+    // Nunca ocupa as 4 faixas de uma vez
+    const escolhidas = faixas.slice(0, quantidade);
+    const novosCarros = [];
 
-    if (indiceAnterior !== -1) {
-        indices.splice(indiceAnterior, 1);
-        indices.push(ultimaFaixa);
-    }
-
-    for (const faixa of indices) {
+    for (const faixa of escolhidas) {
         const novoCarro = new CarroInimigo();
 
         novoCarro.x =
             FAIXAS[faixa] +
             (40 - novoCarro.largura) / 2;
 
-        novoCarro.y = -novoCarro.altura;
+        // Mesma fileira, com leve variação
+        // para deixar o trânsito mais natural
+        const variacao = Math.floor(
+            Math.random() * 15
+        );
+
+        novoCarro.y =
+            -novoCarro.altura - variacao;
 
         novoCarro.sentido =
             faixa < 2 ? "contrario" : "mesmo";
@@ -689,35 +749,38 @@ function criarVeiculoSeguro() {
         novoCarro.passouPerto = false;
         novoCarro.bonusConcedido = false;
 
-        if (
-            faixaEstaLivre(faixa, novoCarro) &&
-            existeRotaDeFuga(faixa, novoCarro)
-        ) {
-            jogo.carrosInimigos.push(novoCarro);
-            ultimaFaixa = faixa;
-            return true;
-        }
+        novosCarros.push(novoCarro);
     }
 
-    return false;
+    if (!ondaPodeAparecer(novosCarros)) {
+        return false;
+    }
+
+    // Adiciona todos os carros da onda juntos
+    jogo.carrosInimigos.push(...novosCarros);
+
+    ultimaFaixa = escolhidas[0];
+
+    return true;
 }
 
 function atualizarTransito() {
     if (jogo.quadros < proximoVeiculo) return;
 
-    const criado = criarVeiculoSeguro();
+    const criado = criarOndaDeCarros();
 
     const dificuldade = Math.floor(
         jogo.quadros / 500
     );
 
+    // Ondas um pouco mais frequentes com o tempo
     const intervaloBase = Math.max(
-        85,
-        135 - dificuldade * 5
+        90,
+        150 - dificuldade * 4
     );
 
     const variacao = Math.floor(
-        Math.random() * 30
+        Math.random() * 35
     );
 
     proximoVeiculo = jogo.quadros +
@@ -733,20 +796,105 @@ function desenharGameOver() {
 
     const pontos = Math.floor(jogo.pontuacao / 10);
     const novoRecorde = pontos > recordeAntesDaPartida;
+    const centro = canvas.width / 2;
 
-    const linhas = [
-        `Pontuação: ${pontos}`,
-        `Recorde: ${jogo.recorde}`,
-        `Ultrapassagens arriscadas: ${totalUltrapassagens}`,
-        novoRecorde ? "NOVO RECORDE!" : "Tente novamente!",
-        "Clique em Reiniciar para jogar"
-    ];
+    // Fundo escurecido
+    ctx.fillStyle = "rgba(5, 11, 20, 0.76)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    desenharPainel(
-        "FIM DE JOGO",
-        linhas,
-        "#ff6565"
+    // Painel central
+    const x = 35;
+    const y = 100;
+    const largura = canvas.width - 70;
+    const altura = 400;
+
+    ctx.save();
+
+    ctx.shadowColor = "rgba(0, 0, 0, 0.55)";
+    ctx.shadowBlur = 24;
+
+    ctx.fillStyle = "rgba(18, 30, 47, 0.97)";
+    ctx.beginPath();
+    ctx.roundRect(x, y, largura, altura, 18);
+    ctx.fill();
+
+    ctx.restore();
+
+    ctx.strokeStyle = "#54769b";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(x, y, largura, altura, 18);
+    ctx.stroke();
+
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    // Título
+    ctx.fillStyle = "#ff6868";
+    ctx.font = "bold 31px Arial";
+    ctx.fillText("FIM DE JOGO", centro, 151);
+
+    // Divisória
+    ctx.strokeStyle = "#364d68";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x + 25, 181);
+    ctx.lineTo(x + largura - 25, 181);
+    ctx.stroke();
+
+    // Pontuação
+    ctx.fillStyle = "#b8c7d9";
+    ctx.font = "bold 14px Arial";
+    ctx.fillText("SUA PONTUAÇÃO", centro, 211);
+
+    ctx.fillStyle = "#ffda55";
+    ctx.font = "bold 53px Arial";
+    ctx.fillText(String(pontos), centro, 260);
+
+    // Recorde
+    ctx.fillStyle = "#dbe8f6";
+    ctx.font = "bold 18px Arial";
+    ctx.fillText(
+        `RECORDE: ${jogo.recorde}`,
+        centro,
+        317
     );
+
+    // Ultrapassagens
+    ctx.fillStyle = "#aebfd3";
+    ctx.font = "14px Arial";
+    ctx.fillText(
+        `Ultrapassagens arriscadas: ${totalUltrapassagens}`,
+        centro,
+        353
+    );
+
+    ctx.fillText(
+        `Bônus conquistado: +${totalUltrapassagens * BONUS_ULTRAPASSAGEM} pontos`,
+        centro,
+        379
+    );
+
+    // Mensagem final
+    ctx.fillStyle = novoRecorde ? "#ffda55" : "#b8d7ff";
+    ctx.font = "bold 18px Arial";
+
+    ctx.fillText(
+        novoRecorde ? "NOVO RECORDE!" : "TENTE NOVAMENTE!",
+        centro,
+        429
+    );
+
+    ctx.fillStyle = "#aebfd3";
+    ctx.font = "13px Arial";
+    ctx.fillText(
+        "Clique em Reiniciar para jogar",
+        centro,
+        466
+    );
+
+    ctx.textAlign = "start";
+    ctx.textBaseline = "alphabetic";
 }
 
 // ==========================
@@ -780,7 +928,7 @@ function atualizarJogo(tempoAtual) {
     for (const carro of jogo.carrosInimigos) {
         carro.atualizar(jogo.velocidade * delta);
 
-        // A colisão tem prioridade sobre qualquer bônus.
+        // Colisão tem prioridade sobre bônus
         if (jogo.colidiu(jogador, carro)) {
             jogo.jogoAtivo = false;
             break;
@@ -795,7 +943,6 @@ function atualizarJogo(tempoAtual) {
 
     const pontos = Math.floor(jogo.pontuacao / 10);
 
-    // Inclui os pontos extras na dificuldade
     atualizarDificuldade(pontos);
 
     textoPontuacao.textContent = pontos;
