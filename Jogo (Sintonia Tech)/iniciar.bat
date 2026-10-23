@@ -3,32 +3,32 @@
 title Highway Dodge
 cd /d "%~dp0"
 
-if not exist "index.html" (
-    if exist "highway-dodge\index.html" (
-        cd /d "highway-dodge"
-    ) else (
-        echo ERRO: index.html nao encontrado.
-        pause
-        exit /b 1
-    )
-)
-
 echo Iniciando Highway Dodge...
+echo.
 
 where py >nul 2>&1
 if %errorlevel%==0 (
-    start "Servidor Highway Dodge" cmd /k "py -3 -m http.server 5502 --directory ""%CD%"""
+    set "PYTHON=py -3"
 ) else (
     where python >nul 2>&1
     if %errorlevel%==0 (
-        start "Servidor Highway Dodge" cmd /k "python -m http.server 5502 --directory ""%CD%"""
+        set "PYTHON=python"
     ) else (
-        echo Python nao encontrado.
+        echo ERRO: Python nao encontrado.
         pause
         exit /b 1
     )
 )
 
-timeout /t 2 /nobreak >nul
-start "" "http://localhost:5502/index.html"
-exit
+if not exist "index.html" (
+    echo ERRO: index.html nao encontrado.
+    pause
+    exit /b 1
+)
+
+start "" "http://localhost:5503/index.html"
+
+echo Mantenha esta janela aberta.
+%PYTHON% -m http.server 5503
+
+pause
