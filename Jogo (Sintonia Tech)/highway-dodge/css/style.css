@@ -10,7 +10,7 @@ body {
     margin: 0;
     min-height: 100vh;
     min-height: 100dvh;
-    padding: 12px;
+    padding: 10px;
 
     background:
         radial-gradient(ellipse at top,
@@ -28,8 +28,8 @@ body {
 #telaJogo {
     width: 100%;
     max-width: 850px;
-    height: calc(100vh - 24px);
-    height: calc(100dvh - 24px);
+    height: calc(100vh - 20px);
+    height: calc(100dvh - 20px);
     min-height: 0;
 
     margin: 0 auto;
@@ -38,14 +38,18 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    gap: 7px;
+    gap: 5px;
 }
+
+/* TÍTULO */
 
 #telaJogo h1 {
     margin: 0;
-    font-size: clamp(19px, 3vh, 28px);
+
+    font-size: clamp(18px, 2.7vh, 26px);
     font-weight: 800;
     letter-spacing: 1.5px;
+
     color: #ffffff;
     flex-shrink: 0;
 }
@@ -57,7 +61,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
 
     margin: 0;
     flex-shrink: 0;
@@ -65,20 +69,20 @@ body {
 
 #telaJogo .informacoes-jogo p {
     margin: 0;
-    padding: 7px 14px;
+    padding: 5px 12px;
 
     background: #1d293a;
     border: 1px solid #35465d;
     border-radius: 10px;
 
     color: #c5d0df;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
 }
 
 #telaJogo .informacoes-jogo span {
     color: #ffffff;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 800;
     font-variant-numeric: tabular-nums;
 }
@@ -88,14 +92,12 @@ body {
 #telaJogo #jogo {
     display: block;
 
-    /*
-       A pista mantém a proporção 400x600.
-       A altura se adapta ao espaço da janela.
-    */
-
+    /* Reserva espaço para os botões e instruções */
+    height: min(560px, calc(100dvh - 265px));
     width: auto;
-    height: min(600px, calc(100dvh - 240px));
+
     max-width: 100%;
+    min-height: 0;
 
     aspect-ratio: 2 / 3;
 
@@ -113,18 +115,18 @@ body {
     flex-shrink: 1;
 }
 
-/* INSTRUÇÕES DA PARTIDA */
+/* INSTRUÇÕES */
 
 #telaJogo .instrucoes-jogo {
     margin: 0;
     color: #aebdd0;
-    font-size: 12px;
-    line-height: 1.3;
+    font-size: 11px;
+    line-height: 1.2;
     flex-shrink: 0;
 }
 
 #telaJogo .instrucoes-jogo p {
-    margin: 2px 0;
+    margin: 1px 0;
 }
 
 /* BOTÕES GERAIS */
@@ -169,7 +171,7 @@ button:disabled {
 
 #telaJogo>button {
     min-width: 160px;
-    padding: 9px 18px;
+    padding: 7px 16px;
     margin: 0;
     flex-shrink: 0;
 
@@ -182,54 +184,52 @@ button:disabled {
     border-color: #9bc5f1;
 }
 
-/* BOTÃO DE INICIAR / REINICIAR */
+/* INICIAR E REINICIAR */
 
-#iniciar,
-#reiniciar {
-    background: #315d88 !important;
-    border-color: #669cd0 !important;
+#telaJogo #iniciar,
+#telaJogo #reiniciar {
+    background: #ffcc00 !important;
+    color: #171717 !important;
+    border: 1px solid #ffe066 !important;
+    font-weight: 800;
 }
 
-#iniciar:hover:not(:disabled),
-#reiniciar:hover:not(:disabled) {
-    background: #4079af !important;
+#telaJogo #iniciar:hover:not(:disabled),
+#telaJogo #reiniciar:hover:not(:disabled) {
+    background: #ffe066 !important;
 }
 
-/* TELAS OCULTAS */
+/* ELEMENTOS OCULTOS */
 
 [hidden] {
     display: none !important;
 }
 
-/* NOTEBOOKS COM MENOS ALTURA */
+/* NOTEBOOKS */
 
 @media (max-height: 800px) {
     #telaJogo {
-        gap: 5px;
+        gap: 4px;
     }
 
     #telaJogo h1 {
-        font-size: 22px;
+        font-size: 21px;
     }
 
     #telaJogo .informacoes-jogo p {
-        padding: 5px 12px;
+        padding: 4px 10px;
     }
 
     #telaJogo #jogo {
-        height: min(600px, calc(100dvh - 205px));
+        height: min(530px, calc(100dvh - 230px));
     }
 
     #telaJogo .instrucoes-jogo {
-        font-size: 11px;
-    }
-
-    #telaJogo .instrucoes-jogo p {
-        margin: 1px 0;
+        font-size: 10px;
     }
 
     #telaJogo>button {
-        padding: 8px 16px;
+        padding: 6px 14px;
         font-size: 13px;
     }
 }
@@ -238,16 +238,16 @@ button:disabled {
 
 @media (max-width: 600px) {
     body {
-        padding: 10px;
+        padding: 8px;
     }
 
     #telaJogo {
-        height: calc(100dvh - 20px);
-        gap: 5px;
+        height: calc(100dvh - 16px);
+        gap: 4px;
     }
 
     #telaJogo h1 {
-        font-size: 21px;
+        font-size: 20px;
     }
 
     #telaJogo .informacoes-jogo {
@@ -255,7 +255,7 @@ button:disabled {
     }
 
     #telaJogo .informacoes-jogo p {
-        padding: 5px 9px;
+        padding: 4px 8px;
         font-size: 12px;
     }
 
@@ -264,13 +264,13 @@ button:disabled {
     }
 
     #telaJogo #jogo {
-        height: min(600px, calc(100dvh - 210px));
+        height: min(530px, calc(100dvh - 225px));
         max-width: 100%;
         border-width: 2px;
     }
 
     #telaJogo .instrucoes-jogo {
-        font-size: 11px;
+        font-size: 10px;
     }
 
     #telaJogo>button {
@@ -278,24 +278,24 @@ button:disabled {
     }
 }
 
-/* TELAS MUITO BAIXAS */
+/* TELAS COM POUCA ALTURA */
 
 @media (max-height: 550px) {
     body {
-        padding: 6px;
+        padding: 5px;
     }
 
     #telaJogo {
-        height: calc(100dvh - 12px);
+        height: calc(100dvh - 10px);
         gap: 3px;
     }
 
     #telaJogo h1 {
-        font-size: 18px;
+        font-size: 17px;
     }
 
     #telaJogo .informacoes-jogo p {
-        padding: 3px 8px;
+        padding: 3px 7px;
         font-size: 11px;
     }
 
@@ -304,28 +304,15 @@ button:disabled {
     }
 
     #telaJogo #jogo {
-        height: max(100px, calc(100dvh - 170px));
+        height: max(100px, calc(100dvh - 195px));
     }
 
     #telaJogo .instrucoes-jogo {
-        font-size: 10px;
+        font-size: 9px;
     }
 
     #telaJogo>button {
         padding: 5px 12px;
         font-size: 12px;
     }
-}
-
-#telaJogo #reiniciar,
-#telaJogo #iniciar {
-    background: #ffcc00 !important;
-    color: #171717;
-    border: 1px solid #ffe066 !important;
-    font-weight: 800;
-}
-
-#telaJogo #reiniciar:hover,
-#telaJogo #iniciar:hover {
-    background: #ffe066 !important;
 }
