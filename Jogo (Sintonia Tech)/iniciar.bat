@@ -1,34 +1,28 @@
 
 @echo off
 title Highway Dodge
+
 cd /d "%~dp0"
 
-echo Iniciando Highway Dodge...
-echo.
-
-where py >nul 2>&1
-if %errorlevel%==0 (
-    set "PYTHON=py -3"
-) else (
-    where python >nul 2>&1
-    if %errorlevel%==0 (
-        set "PYTHON=python"
-    ) else (
-        echo ERRO: Python nao encontrado.
-        pause
-        exit /b 1
-    )
-)
-
 if not exist "index.html" (
-    echo ERRO: index.html nao encontrado.
+    echo ERRO: index.html nao encontrado!
     pause
     exit /b 1
 )
 
-start "" "http://localhost:5503/index.html"
-
+echo Iniciando Highway Dodge...
 echo Mantenha esta janela aberta.
-%PYTHON% -m http.server 5503
+echo.
 
+where py >nul 2>&1
+if %errorlevel%==0 (
+    start "" "http://localhost:5503/index.html"
+    py -3 -m http.server 5503
+) else (
+    start "" "http://localhost:5503/index.html"
+    python -m http.server 5503
+)
+
+echo.
+echo Servidor encerrado ou ocorreu um erro.
 pause
